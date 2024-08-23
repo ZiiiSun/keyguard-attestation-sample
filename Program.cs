@@ -1,9 +1,10 @@
 ﻿// See https://aka.ms/new-console-template for more information
+using keyguardsample;
 using System.Security.Cryptography;
 class TestApp
 {
     static string keyName = "testKey";
-    static void Main(string[] args)
+    static async Task Main(string[] args)
     {
         Console.WriteLine("Getting attestationToken ... ");
         KeyGuardManager kgm = new KeyGuardManager();
@@ -14,21 +15,24 @@ class TestApp
 
         kgm.IsKeyGuardProtected(cngKey);
         kgm.IsPerBootKey(cngKey);
+        await MAAManager.GetRegionInfoFromIMDS();
+        // create self-signed certificate
+        //CertificateManager.CreateSelfSignedCertificate(cngKey);
 
-        AttestationResultErrorCode errorCode = AttestationClientLib.InitAttestationLib(AttestationLogFunction);
+        /*AttestationResultErrorCode errorCode = AttestationClientLib.InitAttestationLib(AttestationLogFunction);
         if (errorCode != AttestationResultErrorCode.SUCCESS)
         {
             Console.WriteLine($"Failed to initialize {nameof(AttestationClientLib)}");
-        }
+        }*/
 
-        errorCode = AttestationClientLib.AttestKeyGuardImportKey("https://sharedeus2.eus2.test.attest.azure.net/", "", null, cngKey.Handle, "kg-sample-client", out string? attestationToken);
+        /*errorCode = AttestationClientLib.AttestKeyGuardImportKey("https://sharedneu.neu.attest.azure.net", "", null, cngKey.Handle, "kg-sample-client", out string? attestationToken);
         if (errorCode != AttestationResultErrorCode.SUCCESS)
         {
             Console.WriteLine($"error in getting token {attestationToken}"); ;
         }else
         {
             Console.WriteLine($"got token {attestationToken}");
-        }
+        }*/
     }
 
     private static void AttestationLogFunction(IntPtr ctx, string logTag, AttestationClientLib.LogLevel level, string function, int line, string message)
