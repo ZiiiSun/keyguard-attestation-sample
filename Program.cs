@@ -15,24 +15,26 @@ class TestApp
 
         kgm.IsKeyGuardProtected(cngKey);
         kgm.IsPerBootKey(cngKey);
-        await MAAManager.GetRegionInfoFromIMDS();
         // create self-signed certificate
-        //CertificateManager.CreateSelfSignedCertificate(cngKey);
+        CertificateManager.CreateSelfSignedCertificate(cngKey);
 
-        /*AttestationResultErrorCode errorCode = AttestationClientLib.InitAttestationLib(AttestationLogFunction);
+        AttestationResultErrorCode errorCode = AttestationClientLib.InitAttestationLib(AttestationLogFunction);
         if (errorCode != AttestationResultErrorCode.SUCCESS)
         {
             Console.WriteLine($"Failed to initialize {nameof(AttestationClientLib)}");
-        }*/
+        }
 
-        /*errorCode = AttestationClientLib.AttestKeyGuardImportKey("https://sharedneu.neu.attest.azure.net", "", null, cngKey.Handle, "kg-sample-client", out string? attestationToken);
+        // get MAA endpoint
+        string endpoint = await MAAManager.GetMAAEndPoint();
+        errorCode = AttestationClientLib.AttestKeyGuardImportKey(endpoint, "", null, cngKey.Handle, "kg-sample-client", out string? attestationToken);
         if (errorCode != AttestationResultErrorCode.SUCCESS)
         {
             Console.WriteLine($"error in getting token {attestationToken}"); ;
-        }else
+        }
+        else
         {
             Console.WriteLine($"got token {attestationToken}");
-        }*/
+        }
     }
 
     private static void AttestationLogFunction(IntPtr ctx, string logTag, AttestationClientLib.LogLevel level, string function, int line, string message)
