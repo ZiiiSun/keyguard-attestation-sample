@@ -16,16 +16,20 @@ class TestApp
         kgm.IsKeyGuardProtected(cngKey);
         kgm.IsPerBootKey(cngKey);
         // create self-signed certificate
-        CertificateManager.CreateSelfSignedCertificate(cngKey);
+        var cert = CertificateManager.CreateSelfSignedCertificate(cngKey);
 
-        AttestationResultErrorCode errorCode = AttestationClientLib.InitAttestationLib(AttestationLogFunction);
+        
+        /*AttestationResultErrorCode errorCode = AttestationClientLib.InitAttestationLib(AttestationLogFunction);
         if (errorCode != AttestationResultErrorCode.SUCCESS)
         {
             Console.WriteLine($"Failed to initialize {nameof(AttestationClientLib)}");
-        }
+        }*/
+
+        await ImdsManagedIdentityManager.GetMICredential(cert);
+
 
         // get MAA endpoint
-        string endpoint = await MAAManager.GetMAAEndPoint();
+        /*string endpoint = await MAAManager.GetMAAEndPoint();
         errorCode = AttestationClientLib.AttestKeyGuardImportKey(endpoint, "", null, cngKey.Handle, "kg-sample-client", out string? attestationToken);
         if (errorCode != AttestationResultErrorCode.SUCCESS)
         {
@@ -34,7 +38,7 @@ class TestApp
         else
         {
             Console.WriteLine($"got token {attestationToken}");
-        }
+        }*/
     }
 
     private static void AttestationLogFunction(IntPtr ctx, string logTag, AttestationClientLib.LogLevel level, string function, int line, string message)
